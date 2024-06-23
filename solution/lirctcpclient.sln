@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "demo", "Demo\demo.csproj", "{17FD1BDF-FE54-42C9-9C87-E87670D97D40}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baksteen.Net.LIRC", "Baksteen.Net.LIRC\Baksteen.Net.LIRC.csproj", "{A1A20C92-3925-425F-B4FD-767FF62102AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baksteen.Net.LIRC", "Baksteen.Net.LIRC2\Baksteen.Net.LIRC.csproj", "{70AC1CA0-5578-49CD-9878-DFC133E490F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1A20C92-3925-425F-B4FD-767FF62102AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1A20C92-3925-425F-B4FD-767FF62102AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1A20C92-3925-425F-B4FD-767FF62102AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1A20C92-3925-425F-B4FD-767FF62102AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70AC1CA0-5578-49CD-9878-DFC133E490F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70AC1CA0-5578-49CD-9878-DFC133E490F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70AC1CA0-5578-49CD-9878-DFC133E490F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70AC1CA0-5578-49CD-9878-DFC133E490F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
