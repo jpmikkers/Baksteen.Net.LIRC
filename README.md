@@ -1,7 +1,14 @@
 # Baksteen.Net.LIRC
-This library enables your .NET application to send infrared remote control commands to other devices _or_ receive infrared remote control commands
+This library enables your .NET application to send and receive infrared remote control commands. This means it can control other devices via IR commands, or have your application be controlled by an IR remote.
 
-It works by connecting to a local (via unix domain socket) or remote (via tcp-ip) LIRC daemon, implementing the protocol described at [https://lirc.org/html/lircd.html](https://lirc.org/html/lircd.html) .
+It works by connecting to a local (via unix domain socket) or remote (via tcp-ip) LIRC daemon, implementing the protocol described at https://lirc.org/html/lircd.html . The LIRC daemon itself is typically running on a cheap single board computer (e.g. a raspberry pi) that can send/receive IR signals with a little bit of hardware.
+
+Some usecases could be:
+- create IR controlled robot using csharp/dotnet.
+- create a multiroom IR repeater
+- create an universal remote control application
+- hook up 'dumb' climate control into a custom home automation system
+
 
 ## Library usage
 
@@ -9,8 +16,6 @@ It works by connecting to a local (via unix domain socket) or remote (via tcp-ip
 
     using System.Net;
     using Baksteen.Net.LIRC;
-
-    ...
 
     // create client
     await using var client = new LIRCClient();
@@ -45,7 +50,7 @@ It works by connecting to a local (via unix domain socket) or remote (via tcp-ip
     }
 
     // send IR command, no repeats
-    await client.SendOnce("samsung","POWER_ON",0);
+    await client.SendOnce("samsung", "POWER_ON" ,0);
 
 ```
 
