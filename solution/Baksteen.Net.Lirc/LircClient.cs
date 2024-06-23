@@ -47,37 +47,37 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
         _responseChannel = Channel.CreateUnbounded<Response>();
     }
 
-    public async Task Connect(UnixDomainSocketEndPoint unixDomainSocketEndPoint)
+    public async Task Connect(EndPoint endPoint)
     {
         if(_isConnected) throw new InvalidOperationException("already connected");
-        var socket = new Socket(unixDomainSocketEndPoint.AddressFamily, SocketType.Stream, ProtocolType.IP)
-        {
-            SendTimeout = 10000,
-            ReceiveTimeout = Timeout.Infinite
-        };
-        await socket.ConnectAsync(unixDomainSocketEndPoint);
-        CompleteConnection(socket);
-    }
 
-    public async Task Connect(IPEndPoint ipEndPoint)
-    {
-        if(_isConnected) throw new InvalidOperationException("already connected");
-        var socket = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
-        {
-            NoDelay = true,
-            SendTimeout = 10000,
-            ReceiveTimeout = Timeout.Infinite
-        };
-        await socket.ConnectAsync(ipEndPoint);
-        CompleteConnection(socket);
-    }
+        Socket socket;
 
-    private void CompleteConnection(Socket socket)
-    {
+        if(endPoint.AddressFamily == AddressFamily.Unix)
+        {
+            socket = new(endPoint.AddressFamily, SocketType.Stream, ProtocolType.IP)
+            {
+                SendTimeout = 10000,
+                ReceiveTimeout = Timeout.Infinite
+            };
+        }
+        else
+        {
+            socket = new(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
+            {
+                NoDelay = true,
+                SendTimeout = 10000,
+                ReceiveTimeout = Timeout.Infinite
+            };
+        }
+
+        await socket.ConnectAsync(endPoint);
+
         _stream = new NetworkStream(socket, true);
         _writer = new StreamWriter(_stream, System.Text.Encoding.ASCII, leaveOpen: true);
         _reader = new StreamReader(_stream, System.Text.Encoding.ASCII, leaveOpen: true);
         _worker = ResponseWorker(_cts.Token);
+
         _isConnected = true;
     }
 
