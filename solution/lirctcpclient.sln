@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "demo", "Demo\demo.csproj", "{17FD1BDF-FE54-42C9-9C87-E87670D97D40}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baksteen.Net.LIRC", "Baksteen.Net.Lirc\Baksteen.Net.LIRC.csproj", "{A1A20C92-3925-425F-B4FD-767FF62102AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1A20C92-3925-425F-B4FD-767FF62102AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1A20C92-3925-425F-B4FD-767FF62102AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1A20C92-3925-425F-B4FD-767FF62102AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1A20C92-3925-425F-B4FD-767FF62102AB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E84A442-C30F-4D69-B284-0A3319FFE76E}
+	EndGlobalSection
+EndGlobal

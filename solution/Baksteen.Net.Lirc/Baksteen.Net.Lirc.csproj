@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Title>LIRC client library</Title>
+    <Description>Linux Infrared Remote Control client library</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>False</IncludeSymbols>
+    <PackageProjectUrl>https://github.com/jpmikkers/Baksteen.Net.LIRC</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>lirc;client;infrared;remote;remote-control</PackageTags>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+</Project>
