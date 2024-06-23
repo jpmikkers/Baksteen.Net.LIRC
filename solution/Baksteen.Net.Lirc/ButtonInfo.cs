@@ -2,7 +2,7 @@
 
 public record class ButtonInfo
 {
-    public byte[] Code { get; set; } = [];
-    public string Button { get; set; } = String.Empty;
-    public string RemoteControl { get; set; } = String.Empty;
+    public string Button { get; init; } = String.Empty;
+    public string RemoteControl { get; init; } = String.Empty;
+    public byte[] Code { get; init; } = [];
 }
