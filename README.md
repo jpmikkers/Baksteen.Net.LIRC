@@ -3,7 +3,7 @@ This library enables your .NET application to send infrared remote control comma
 
 It works by connecting to a local (via unix domain socket) or remote (via tcp-ip) LIRC daemon, implementing the protocol described at [https://lirc.org/html/lircd.html](https://lirc.org/html/lircd.html) .
 
-## Usage
+## Library usage
 
 ```csharp
 
@@ -48,3 +48,14 @@ It works by connecting to a local (via unix domain socket) or remote (via tcp-ip
     await client.SendOnce("samsung","POWER_ON",0);
 
 ```
+
+## How to set up LIRC hardware and software on linux
+
+To set up LIRC on linux on raspberry pi, I used the following guides and sites:
+
+- https://www.instructables.com/Setup-IR-Remote-Control-Using-LIRC-for-the-Raspber/
+- https://www.instructables.com/Raspberry-Pi-Zero-Universal-Remote/
+- https://www.digikey.com/en/maker/tutorials/2021/how-to-send-and-receive-ir-signals-with-a-raspberry-pi
+- https://www.lirc.org/
+
+Supported IR remote controls configuration files (.lircd.conf) can be found here: https://lirc-remotes.sourceforge.net/remotes-table.html
