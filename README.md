@@ -1,7 +1,7 @@
 # Baksteen.Net.LIRC
 This library enables your .NET application to send and receive infrared remote control commands. This means it can control other devices via IR commands, or have your application be controlled by an IR remote.
 
-It works by connecting to a local (via unix domain socket) or remote (via tcp-ip) LIRC daemon, implementing the protocol described at https://lirc.org/html/lircd.html . The LIRC daemon itself is typically running on a cheap single board computer (e.g. a raspberry pi) that can send/receive IR signals with a little bit of hardware.
+It works by connecting to a local (via unix domain socket) or remote (via tcp-ip) LIRC daemon, implementing the protocol described at https://lirc.org/html/lircd.html . The LIRC daemon itself typically runs on a cheap single board computer (e.g. a raspberry pi) that can send/receive IR signals with a little bit of hardware.
 
 Some usecases could be:
 - create IR controlled robot using csharp/dotnet.
