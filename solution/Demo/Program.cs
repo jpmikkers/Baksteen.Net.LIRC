@@ -39,6 +39,8 @@ internal class Program
             Console.WriteLine(remoteControlKey);
         }
 
+        await client.SendOnce("amino-aria7", "KEY_PLAY", 0);
+
         //await client.Test();
         Console.ReadLine();
     }

@@ -23,15 +23,15 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
     private const string KWD_END = "END";
     private const string KWD_SUCCESS = "SUCCESS";
     private const string KWD_ERROR = "ERROR";
-    
+
     private const string CMD_VERSION = "VERSION";
-    private const string CMD_LIST = "LIST";    
+    private const string CMD_LIST = "LIST";
     private const string CMD_SEND_ONCE = "SEND_ONCE";
     private const string CMD_SEND_START = "SEND_START";
     private const string CMD_SEND_STOP = "SEND_STOP";
 
     readonly CancellationTokenSource _cts = new();
-   
+
     NetworkStream? _stream;
     TextWriter _writer = default!;
     TextReader _reader = default!;
@@ -39,7 +39,7 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
     readonly Channel<Response> _responseChannel;
     bool _isConnected;
 
-    public Func<LIRCEvent,Task> OnEvent { get; set; } = _ => Task.CompletedTask;
+    public Func<LIRCEvent, Task> OnEvent { get; set; } = _ => Task.CompletedTask;
     public TimeSpan ResponseTimeout { get; set; } = TimeSpan.FromSeconds(10);
 
     public LIRCClient()
@@ -88,7 +88,7 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
 
     private void FlushResponses()
     {
-        while(_responseChannel.Reader.TryRead(out _));
+        while(_responseChannel.Reader.TryRead(out _)) ;
     }
 
     private async Task<Response> SendReceive(string command)
@@ -158,6 +158,26 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
         }
 
         return result;
+    }
+
+    public async Task SendOnce(string remoteControl, string button, int repeats = 0)
+    {
+        AssertConnected();
+        var cmd = $"{CMD_SEND_ONCE} {remoteControl} {button}";
+        if(repeats > 0) cmd += $" {repeats}";
+        _ = await SendReceive(cmd);
+    }
+
+    public async Task SendStart(string remoteControl, string button)
+    {
+        AssertConnected();
+        _ = await SendReceive($"{CMD_SEND_START} {remoteControl} {button}");
+    }
+
+    public async Task SendStop(string remoteControl, string button)
+    {
+        AssertConnected();
+        _ = await SendReceive($"{CMD_SEND_STOP} {remoteControl} {button}");
     }
 
     private async Task<String> ReadResponseLine(CancellationToken cancellationToken)
@@ -257,9 +277,9 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
                             throw new LIRCException("Invalid sighup message");
                         }
 
-                        await OnEvent(new LIRCEvent 
-                        { 
-                            Event = LIRCEvent.EventType.Sighup 
+                        await OnEvent(new LIRCEvent
+                        {
+                            Event = LIRCEvent.EventType.Sighup
                         });
                     }
                     else
@@ -304,7 +324,7 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
                 }
             }
         }
-        catch (Exception ex) when (ex is not OperationCanceledException) 
+        catch(Exception ex) when(ex is not OperationCanceledException)
         {
             await OnEvent(new LIRCEvent
             {
