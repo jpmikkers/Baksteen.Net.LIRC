@@ -18,8 +18,8 @@ internal class Program
             await Task.CompletedTask;
         };
 
-        //new UnixDomainSocketEndPoint("/usr/var/run/lirc/lircd");
         await client.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.220"), 8765));
+        //await client.Connect(new UnixDomainSocketEndPoint("/var/run/lirc/lircd"));
 
         var version = await client.GetVersion();
         Console.WriteLine($"lircd version {version}");
