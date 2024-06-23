@@ -8,7 +8,7 @@ namespace Baksteen.Net.LIRC;
 // to test SIGHUP:
 // sudo killall -s SIGHUP lircd
 
-public sealed class LIRCClient : IAsyncDisposable, IDisposable
+public sealed class LIRCClient : ILIRCClient
 {
     private record Response
     {
@@ -39,7 +39,9 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
     readonly Channel<Response> _responseChannel;
     bool _isConnected;
 
-    public Func<LIRCEvent, Task> OnEvent { get; set; } = _ => Task.CompletedTask;
+    public Func<LIRCEvent, Task>? OnLIRCEventAsync { get; set; }
+    public Action<LIRCEvent>? OnLIRCEventSync { get; set; }
+
     public TimeSpan ResponseTimeout { get; set; } = TimeSpan.FromSeconds(10);
 
     public LIRCClient()
@@ -277,7 +279,7 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
                             throw new LIRCException("Invalid sighup message");
                         }
 
-                        await OnEvent(new LIRCEvent
+                        await FireEvent(new LIRCEvent
                         {
                             Event = LIRCEvent.EventType.Sighup
                         });
@@ -310,7 +312,7 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
                         };
 
                         //Console.WriteLine($"decoded button: {decodedButton}");
-                        await OnEvent(new LIRCEvent
+                        await FireEvent(new LIRCEvent
                         {
                             Event = LIRCEvent.EventType.ReceivedButton,
                             DecodedButton = decodedButton
@@ -326,11 +328,24 @@ public sealed class LIRCClient : IAsyncDisposable, IDisposable
         }
         catch(Exception ex) when(ex is not OperationCanceledException)
         {
-            await OnEvent(new LIRCEvent
+            await FireEvent(new LIRCEvent
             {
                 Event = LIRCEvent.EventType.Disconnected,
                 Reason = ex
             });
+        }
+    }
+
+    private async Task FireEvent(LIRCEvent ev)
+    {
+        if(OnLIRCEventSync is { } syncHandler)
+        {
+            syncHandler(ev);
+        }
+
+        if(OnLIRCEventAsync is { } asyncHandler)
+        {
+            await asyncHandler(ev);
         }
     }
 

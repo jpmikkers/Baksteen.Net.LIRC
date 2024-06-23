@@ -5,14 +5,13 @@ using Baksteen.Net.LIRC;
 
 namespace lirctcpclient;
 
-
 internal class Program
 {
     static async Task Main(string[] args)
     {
         await using var client = new LIRCClient();
 
-        client.OnEvent = async ev =>
+        client.OnLIRCEventAsync = async ev =>
         {
             Console.WriteLine($"event: {ev}");
             await Task.CompletedTask;

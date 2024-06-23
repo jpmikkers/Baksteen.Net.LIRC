@@ -16,7 +16,7 @@ It works by connecting to a local (via unix domain socket) or remote (via tcp-ip
     await using var client = new LIRCClient();
 
     // hook up event to receive remote control commands
-    client.OnEvent = async ev =>
+    client.OnLIRCEventAsync = async ev =>
     {
         Console.WriteLine($"event: {ev}");
         await Task.CompletedTask;
