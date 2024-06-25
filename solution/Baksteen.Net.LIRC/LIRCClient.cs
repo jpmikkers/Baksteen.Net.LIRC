@@ -315,7 +315,7 @@ public sealed class LIRCClient : ILIRCClient
                         await FireEvent(new LIRCEvent
                         {
                             Event = LIRCEvent.EventType.ReceivedButton,
-                            DecodedButton = decodedButton
+                            Button = decodedButton
                         });
                     }
                     else

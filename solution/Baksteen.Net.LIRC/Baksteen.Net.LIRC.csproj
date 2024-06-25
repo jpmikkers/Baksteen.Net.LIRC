@@ -10,9 +10,11 @@
     <IncludeSymbols>False</IncludeSymbols>
     <PackageProjectUrl>https://github.com/jpmikkers/Baksteen.Net.LIRC</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>lirc;client;infrared;remote;remote-control</PackageTags>
+    <PackageTags>lirc;client;infrared;remote;remote-control;rpi;raspberry-pi</PackageTags>
     <PackageReleaseNotes>First release</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <RepositoryUrl>https://github.com/jpmikkers/Baksteen.Net.LIRC.git</RepositoryUrl>
   </PropertyGroup>
 
 </Project>

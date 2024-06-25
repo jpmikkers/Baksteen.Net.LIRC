@@ -20,8 +20,18 @@ public record LIRCEvent
         Sighup
     }
 
+    /// <summary>
+    /// Which type of LIRC event occurred
+    /// </summary>
     public EventType Event { get; init; }
-    public DecodedButton? DecodedButton { get; init; }
 
+    /// <summary>
+    /// IR button command received, only has a value when <see cref="Event"/> is set to <see cref="EventType.ReceivedButton"/>
+    /// </summary>
+    public DecodedButton? Button { get; init; }
+
+    /// <summary>
+    /// Contains the disconnect failure reason, only has a value when <see cref="Event"/> is set to <see cref="EventType.Disconnected"/>
+    /// </summary>
     public Exception? Reason { get; init; }
 }
