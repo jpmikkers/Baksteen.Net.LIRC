@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "demo", "Demo\demo.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baksteen.Net.LIRC", "Baksteen.Net.LIRC\Baksteen.Net.LIRC.csproj", "{E29867D6-904D-4023-873E-DFE64249C820}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LIRCTestUI", "LIRCTestUI\LIRCTestUI.csproj", "{2F7CA13F-B6D4-4F46-AFA7-376873B6444C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E29867D6-904D-4023-873E-DFE64249C820}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E29867D6-904D-4023-873E-DFE64249C820}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E29867D6-904D-4023-873E-DFE64249C820}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F7CA13F-B6D4-4F46-AFA7-376873B6444C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7CA13F-B6D4-4F46-AFA7-376873B6444C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7CA13F-B6D4-4F46-AFA7-376873B6444C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7CA13F-B6D4-4F46-AFA7-376873B6444C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,200 @@
+<Window
+    x:Class="LIRCTestUI.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LIRCTestUI.ViewModels"
+    Title="LIRCTestUI"
+    Width="800"
+    Height="450"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:MainWindowViewModel"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
+
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+
+		<Border
+            Margin="10,10,10,5"
+            Padding="8"
+            BorderBrush="Gray"
+            BorderThickness="1"
+            CornerRadius="3"
+            DockPanel.Dock="Top">
+
+            <StackPanel
+                ClipToBounds="True"
+                Orientation="Horizontal"
+                Spacing="10">
+
+                <StackPanel VerticalAlignment="Center" IsEnabled="{CompiledBinding !Connected}">
+                    <CheckBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        IsChecked="{CompiledBinding UseUnixDomainSocket}">
+                        _Unix domain socket
+                    </CheckBox>
+                    <CheckBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        IsChecked="{CompiledBinding !UseUnixDomainSocket}">
+                        _Tcp/ip
+                    </CheckBox>
+                </StackPanel>
+
+                <Border
+					Margin="0,2"
+                    Background="Gray"
+                    BorderBrush="Gray"
+                    BorderThickness="3"
+                    CornerRadius="4"/>
+
+                <StackPanel VerticalAlignment="Center" IsEnabled="{CompiledBinding !Connected}">
+                    <Label IsVisible="{CompiledBinding !UseUnixDomainSocket}" Target="tbTcpIPEndPoint">_Endpoint:</Label>
+                    <AutoCompleteBox
+						Name="tbTcpIPEndPoint"
+                        MinWidth="200"
+                        FilterMode="StartsWith"
+                        IsVisible="{CompiledBinding !UseUnixDomainSocket}"
+                        ItemsSource="{CompiledBinding TcpipEndPointCompletions}"
+                        Text="{CompiledBinding IPEndPointAsString}" />
+                    <Label IsVisible="{CompiledBinding UseUnixDomainSocket}" Target="tbUnixEndPoint">_Endpoint path:</Label>
+                    <AutoCompleteBox
+						Name="tbUnixEndPoint"
+                        MinWidth="200"
+                        FilterMode="StartsWith"
+                        IsVisible="{CompiledBinding UseUnixDomainSocket}"
+                        ItemsSource="{CompiledBinding UnixEndPointCompletions}"
+                        Text="{CompiledBinding UnixEndPointAsString}" />
+                </StackPanel>
+
+                <Border
+					Margin="0,2"
+                    Background="Gray"
+                    BorderBrush="Gray"
+                    BorderThickness="3"
+                    CornerRadius="4"/>
+
+                <StackPanel VerticalAlignment="Center" Spacing="4">
+                    <Button
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Command="{CompiledBinding ConnectCommand}">
+                        _Connect
+                    </Button>
+                    <Button
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Command="{CompiledBinding DisconnectCommand}">
+                        _Disconnect
+                    </Button>
+                </StackPanel>
+
+                <Button Command="{CompiledBinding ClearMarksCommand}">Clear marks</Button>
+            </StackPanel>
+        </Border>
+
+        <Border
+            Margin="10,5,10,10"
+            Padding="0"
+            BorderBrush="Gray"
+            BorderThickness="1"
+            CornerRadius="3"
+            DockPanel.Dock="Top">
+
+            <TabControl
+                AutoScrollToSelectedItem="True"
+                ItemsSource="{CompiledBinding RemoteList}"
+                SelectedItem="{CompiledBinding SelectedRemote}">
+                <TabControl.DataTemplates>
+                    <DataTemplate DataType="vm:IRRemote">
+
+                        <ScrollViewer
+                            Name="MyScrollViewer"
+                            AllowAutoHide="True"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Visible">
+                            <ItemsControl FlowDirection="LeftToRight" ItemsSource="{CompiledBinding ButtonList}">
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Margin="4"
+                                            Classes="irbutton"
+                                            Classes.seen="{CompiledBinding Seen}"
+                                            Command="{CompiledBinding ClickedCommand}">
+                                            <AdornerLayer.Adorner>
+                                                <Border
+                                                    Margin="-1"
+                                                    AdornerLayer.IsClipEnabled="False"
+                                                    BorderBrush="Black"
+                                                    BorderThickness="0"
+                                                    Classes.triggered="{CompiledBinding Triggered}"
+                                                    CornerRadius="12"
+                                                    UseLayoutRounding="False">
+                                                    <Border.Styles>
+                                                        <Style Selector="Border.triggered">
+                                                            <Style.Animations>
+                                                                <Animation IterationCount="1" Duration="0:0:0.5">
+                                                                    <KeyFrame Cue="0%">
+                                                                        <Setter Property="BorderBrush" Value="LightYellow" />
+                                                                        <Setter Property="Margin" Value="-16" />
+                                                                        <Setter Property="BorderThickness" Value="10" />
+                                                                    </KeyFrame>
+                                                                    <KeyFrame Cue="10%">
+                                                                        <Setter Property="BorderBrush" Value="Green" />
+                                                                    </KeyFrame>
+                                                                    <KeyFrame Cue="100%">
+                                                                        <Setter Property="BorderBrush" Value="Black" />
+                                                                        <Setter Property="Margin" Value="0" />
+                                                                        <Setter Property="BorderThickness" Value="1" />
+                                                                    </KeyFrame>
+                                                                </Animation>
+                                                            </Style.Animations>
+                                                        </Style>
+                                                        <Style Selector="Border:not(.triggered)">
+                                                            <Setter Property="BorderBrush" Value="#00000000" />
+                                                            <Setter Property="Margin" Value="-4" />
+                                                            <Setter Property="BorderThickness" Value="0" />
+                                                        </Style>
+                                                    </Border.Styles>
+                                                </Border>
+                                            </AdornerLayer.Adorner>
+                                            <TextBlock Text="{CompiledBinding Name}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                        </ScrollViewer>
+                    </DataTemplate>
+                </TabControl.DataTemplates>
+
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TabItem Header="{CompiledBinding Name}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+            </TabControl>
+        </Border>
+    </DockPanel>
+
+</Window>
