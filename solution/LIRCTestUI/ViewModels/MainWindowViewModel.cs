@@ -203,7 +203,7 @@ public partial class MainWindowViewModel : ObservableValidator
     }
 
     [RelayCommand]
-    private async Task DoIt(IRButton? button)
+    private async Task SendOnce(IRButton? button)
     {
         if(button is not null) await button.TriggerAnimation();
 

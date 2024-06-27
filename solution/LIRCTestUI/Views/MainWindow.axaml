@@ -146,7 +146,7 @@
                                             Margin="4"
                                             Classes="irbutton"
                                             Classes.seen="{CompiledBinding Seen}"
-											Command="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).DoItCommand}" 
+											Command="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).SendOnceCommand}" 
 											CommandParameter="{CompiledBinding .}">
 											<AdornerLayer.Adorner>
                                                 <Border
