@@ -18,7 +18,7 @@
 		</Style>
 
 		<Style Selector="Button.irbutton.seen">
-			<Setter Property="Background" Value="Red"/>
+			<Setter Property="Background" Value="OrangeRed"/>
 		</Style>
 
 		<!--<Style Selector="^:pointerover">
@@ -45,6 +45,13 @@
 		<Style Selector="TabItem">
 			<Setter Property="Padding" Value="8,0,8,0" />
 			<Setter Property="MinHeight" Value="40" />
+		</Style>
+
+		<!--  fixes https://github.com/AvaloniaUI/Avalonia/issues/13249  -->
+		<Style Selector="TextBox /template/ ScrollViewer#PART_ScrollViewer">
+			<Style Selector="^ /template/ ScrollBar">
+				<Setter Property="Cursor" Value="Arrow" />
+			</Style>
 		</Style>
 	</Application.Styles>
 </Application>

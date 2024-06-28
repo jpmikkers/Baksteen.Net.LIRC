@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using Baksteen.Net.LIRC;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LIRCTestUI.Tools;
 using LIRCTestUI.Views;
 using System;
 using System.Collections.Generic;
@@ -165,7 +166,7 @@ public partial class MainWindowViewModel : ObservableValidator
         }
         catch(Exception ex)
         {
-            // TODO
+            await ShowExceptionDialog(ex);
         }
     }
 
@@ -205,13 +206,35 @@ public partial class MainWindowViewModel : ObservableValidator
     [RelayCommand]
     private async Task SendOnce(IRButton? button)
     {
-        if(button is not null) await button.TriggerAnimation();
-
-        if(Connected && 
-           _client is not null && 
-           button is not null)
+        try
         {
-            await _client.SendOnce(button.RemoteName, button.Name, 0);
+            if(Connected &&
+               _client is not null &&
+               button is not null)
+            {
+                await _client.SendOnce(button.RemoteName, button.Name, 0);
+            }
         }
+        catch(Exception ex)
+        {
+            await ShowExceptionDialog(ex);
+        }
+    }
+
+    private async Task ShowExceptionDialog(Exception ex)
+    {
+        var view = ViewResolver.LocateView(this);
+
+        var dialog = new ErrorDialog()
+        {
+            DataContext = new ErrorDialogViewModel
+            {
+                Title = "Error",
+                Message = ex.Message,
+                Details = ex.ToString()
+            }
+        };
+
+        await DialogHelpers.ShowDialog(view, dialog);
     }
 }
