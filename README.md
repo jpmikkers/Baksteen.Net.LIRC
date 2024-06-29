@@ -17,21 +17,22 @@ Some usecases could be:
     using System.Net;
     using Baksteen.Net.LIRC;
 
-    // create client
-    await using var client = new LIRCClient();
+    // create and connect client
+    await using var client = await LIRCClient.Connect(
+        new UnixDomainSocketEndPoint("/var/run/lirc/lircd"),
+        new LIRCClientSettings
+        {
+            // hook up event to receive remote control commands
+            OnLIRCEventAsync = async ev =>
+            {
+                Console.WriteLine($"event: {ev}");
+                await Task.CompletedTask;
+            }       
+        }
+    );
 
-    // hook up event to receive remote control commands
-    client.OnLIRCEventAsync = async ev =>
-    {
-        Console.WriteLine($"event: {ev}");
-        await Task.CompletedTask;
-    };
-    
-    // connect to local LIRC daemon 
-    await client.Connect(new UnixDomainSocketEndPoint("/var/run/lirc/lircd"));
-
-    // alternatively: connect to remote LIRC daemon over TCP
-    // await client.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.220"), 8765));
+    // alternatively: to connect to remote LIRC daemon over TCP
+    // ... new IPEndPoint(IPAddress.Parse("192.168.1.220"), 8765))
 
     // list available remote controls
     var remoteControls = await client.ListRemoteControls();
