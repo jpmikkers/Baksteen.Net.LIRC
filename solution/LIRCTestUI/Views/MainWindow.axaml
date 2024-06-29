@@ -6,6 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LIRCTestUI.ViewModels"
     Title="LIRCTestUI"
+	MinWidth="650"
+	MinHeight="200"	
     Width="800"
     Height="450"
     d:DesignHeight="450"
