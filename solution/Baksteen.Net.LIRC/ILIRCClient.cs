@@ -2,27 +2,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
 using System.Threading.Tasks;
+
+public record LIRCClientSettings
+{
+    public Func<LIRCEvent, Task>? OnLIRCEventAsync { get; set; }
+    public Action<LIRCEvent>? OnLIRCEventSync { get; set; }
+    public TimeSpan ResponseTimeout { get; set; } = TimeSpan.FromSeconds(10);
+}
 
 public interface ILIRCClient : IAsyncDisposable, IDisposable
 {
-    Func<LIRCEvent, Task>? OnLIRCEventAsync { get; set; }
-    Action<LIRCEvent>? OnLIRCEventSync { get; set; }
-    TimeSpan ResponseTimeout { get; set; }
-
-    /// <summary>
-    /// Connect to LIRC daemon. This can be a local daemon over unix domain socket or via tcp/ip. 
-    /// <para>
-    /// The default LIRCD unix domain socket endpoint is at <c>/var/run/lirc/lircd</c>.<br/>
-    /// The default LIRCD tcp/ip endpoint port number is <c>8765</c>.
-    /// </para>
-    /// </summary>
-    /// <param name="endPoint">endpoint of the LIRC daemon to connect to. This must be either a <see cref="UnixDomainSocketEndPoint"/> 
-    /// or a <see cref="IPEndPoint"/></param>
-    /// <returns></returns>
-    Task Connect(EndPoint endPoint);
+    LIRCClientSettings Settings { get; }
 
     /// <summary>
     /// Retrieve LIRC daemon version string.

@@ -39,17 +39,34 @@ public sealed class LIRCClient : ILIRCClient
     readonly Channel<Response> _responseChannel;
     bool _isConnected;
 
-    public Func<LIRCEvent, Task>? OnLIRCEventAsync { get; set; }
-    public Action<LIRCEvent>? OnLIRCEventSync { get; set; }
+    public LIRCClientSettings Settings { get; private init; }
 
-    public TimeSpan ResponseTimeout { get; set; } = TimeSpan.FromSeconds(10);
-
-    public LIRCClient()
+    private LIRCClient(LIRCClientSettings settings)
     {
+        this.Settings = settings;
         _responseChannel = Channel.CreateUnbounded<Response>();
     }
 
-    public async Task Connect(EndPoint endPoint)
+    /// <summary>
+    /// Connect to LIRC daemon. This can be a local daemon over unix domain socket or via tcp/ip. 
+    /// <para>
+    /// The default LIRCD unix domain socket endpoint is at <c>/var/run/lirc/lircd</c>.<br/>
+    /// The default LIRCD tcp/ip endpoint port number is <c>8765</c>.
+    /// </para>
+    /// </summary>
+    /// <param name="endPoint">endpoint of the LIRC daemon to connect to. This must be either a <see cref="UnixDomainSocketEndPoint"/> 
+    /// or a <see cref="IPEndPoint"/>
+    /// </param>
+    /// <param name="settings">the settings to use during construction of the LIRC client. See also <seealso cref="LIRCClientSettings"/></param>
+    /// <returns></returns>
+    public static async Task<ILIRCClient> Connect(EndPoint endPoint, LIRCClientSettings settings)
+    {
+        var result = new LIRCClient(settings);
+        await result.Connect(endPoint);
+        return result;
+    }
+
+    private async Task Connect(EndPoint endPoint)
     {
         if(_isConnected) throw new InvalidOperationException("already connected");
 
@@ -100,7 +117,7 @@ public sealed class LIRCClient : ILIRCClient
         await _writer.FlushAsync();
 
         using var tcs = new CancellationTokenSource();
-        tcs.CancelAfter(ResponseTimeout);
+        tcs.CancelAfter(Settings.ResponseTimeout);
         var response = await _responseChannel.Reader.ReadAsync(tcs.Token);
 
         if(response.Command != command)
@@ -338,12 +355,12 @@ public sealed class LIRCClient : ILIRCClient
 
     private async Task FireEvent(LIRCEvent ev)
     {
-        if(OnLIRCEventSync is { } syncHandler)
+        if(Settings.OnLIRCEventSync is { } syncHandler)
         {
             syncHandler(ev);
         }
 
-        if(OnLIRCEventAsync is { } asyncHandler)
+        if(Settings.OnLIRCEventAsync is { } asyncHandler)
         {
             await asyncHandler(ev);
         }

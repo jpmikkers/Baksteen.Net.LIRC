@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "demo", "Demo\demo.csproj", "{17FD1BDF-FE54-42C9-9C87-E87670D97D40}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baksteen.Net.LIRC", "Baksteen.Net.LIRC\Baksteen.Net.LIRC.csproj", "{E29867D6-904D-4023-873E-DFE64249C820}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LIRCTestUI", "LIRCTestUI\LIRCTestUI.csproj", "{2F7CA13F-B6D4-4F46-AFA7-376873B6444C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LIRCTestUI", "LIRCTestUI\LIRCTestUI.csproj", "{2F7CA13F-B6D4-4F46-AFA7-376873B6444C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17FD1BDF-FE54-42C9-9C87-E87670D97D40}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E29867D6-904D-4023-873E-DFE64249C820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E29867D6-904D-4023-873E-DFE64249C820}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E29867D6-904D-4023-873E-DFE64249C820}.Release|Any CPU.ActiveCfg = Release|Any CPU

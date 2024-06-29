@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 // then on Apply/OK buttons you can bind IsEnabled to !HasErrors
 public partial class MainWindowViewModel : ObservableValidator
 {
-    private LIRCClient? _client;
+    private ILIRCClient? _client;
 
     [ObservableProperty]
     private bool _useUnixDomainSocket = true;
@@ -122,16 +122,12 @@ public partial class MainWindowViewModel : ObservableValidator
     {
         try
         {
+            EndPoint endPoint;
             RemoteList.Clear();
-
-            _client = new LIRCClient()
-            {
-                OnLIRCEventAsync = HandleLIRCEvent
-            };
 
             if(UseUnixDomainSocket)
             {
-                await _client.Connect(new UnixDomainSocketEndPoint(UnixEndPointAsString));
+                endPoint = new UnixDomainSocketEndPoint(UnixEndPointAsString);
             }
             else
             {
@@ -146,9 +142,16 @@ public partial class MainWindowViewModel : ObservableValidator
                     throw new InvalidOperationException("Could not resolve ip address");
                 }
 
-                //await _client.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.220"), 8765));
-                await _client.Connect(new IPEndPoint(address, uri.Port));
+                endPoint = new IPEndPoint(address, uri.Port);
             }
+
+            _client = await LIRCClient.Connect(
+                endPoint,
+                new LIRCClientSettings
+                {
+                    OnLIRCEventAsync = HandleLIRCEvent
+                }
+            );
 
             foreach(var remote in await _client.ListRemoteControls())
             {
