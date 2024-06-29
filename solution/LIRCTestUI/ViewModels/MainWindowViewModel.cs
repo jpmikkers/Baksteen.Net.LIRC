@@ -104,16 +104,7 @@ public partial class MainWindowViewModel : ObservableValidator
     }
 
     [ObservableProperty]
-    private AvaloniaList<IRRemote> _remoteList = new()
-    {
-        new IRRemote
-        {
-            Name = "Samsung", ButtonList = new ()
-            {
-                new IRButton { RemoteName = "Samsung", Name = "KEY_POWER" },
-            }
-        }
-    };
+    private AvaloniaList<IRRemote> _remoteList = [];
 
     private bool CanConnect => !Connected;
 
@@ -146,8 +137,8 @@ public partial class MainWindowViewModel : ObservableValidator
             }
 
             _client = await LIRCClient.Connect(
-                endPoint,
-                new LIRCClientSettings
+                endPoint: endPoint,
+                settings: new()
                 {
                     OnLIRCEventAsync = HandleLIRCEvent
                 }
