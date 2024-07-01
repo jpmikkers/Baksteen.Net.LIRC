@@ -39,7 +39,11 @@
                 Orientation="Horizontal"
                 Spacing="10">
 
-                <StackPanel VerticalAlignment="Center" IsEnabled="{CompiledBinding !Connected}">
+				<Border Background="#22000000" CornerRadius="5" Margin="4,0,4,0">
+    				<Image Margin="3,3" Height="64" Width="64" Source="/Assets/lirctest_256x256.png" RenderOptions.BitmapInterpolationMode="HighQuality"/>
+				</Border>
+
+				<StackPanel VerticalAlignment="Center" IsEnabled="{CompiledBinding !Connected}">
                     <CheckBox
                         Grid.Row="0"
                         Grid.Column="1"
@@ -64,7 +68,7 @@
                     CornerRadius="4"/>
 
                 <StackPanel VerticalAlignment="Center" IsEnabled="{CompiledBinding !Connected}">
-                    <Label IsVisible="{CompiledBinding !UseUnixDomainSocket}" Target="tbTcpIPEndPoint">_Endpoint:</Label>
+					<Label IsVisible="{CompiledBinding !UseUnixDomainSocket}" Target="tbTcpIPEndPoint">_Endpoint:</Label>
                     <AutoCompleteBox
 						Name="tbTcpIPEndPoint"
                         MinWidth="200"
