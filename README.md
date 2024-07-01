@@ -9,6 +9,10 @@ Some usecases could be:
 - create an universal remote control application
 - hook up 'dumb' climate control into a custom home automation system
 
+## LIRCTest
+The project includes a user interface built using AvaloniaUI, so it will run on Linux and Windows (and probably Apple Mac). It displays all the available remotes and buttons of a LIRC daemon and allows you to test sending and receiving IR commands.
+
+https://github.com/jpmikkers/Baksteen.Net.LIRC/assets/10578746/170d5c77-1eb8-483d-b695-a11ab4c13745
 
 ## Library usage
 
