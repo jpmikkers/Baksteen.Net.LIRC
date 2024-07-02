@@ -84,7 +84,7 @@ public partial class MainWindowViewModel : ObservableValidator
 
                     if(irButton is not null)
                     {
-                        irButton.Seen = true;
+                        irButton.IsSeen = true;
                         await irButton.TriggerAnimation();
 
                         // scroll button into view
@@ -192,7 +192,7 @@ public partial class MainWindowViewModel : ObservableValidator
         {
             foreach(var button in remote.ButtonList)
             {
-                button.Seen = false;
+                button.IsSeen = false;
             }
         }
     }

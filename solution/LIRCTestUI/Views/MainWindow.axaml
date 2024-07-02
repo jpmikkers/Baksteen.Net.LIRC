@@ -151,7 +151,7 @@
 										<Button
                                             Margin="4"
                                             Classes="irbutton"
-                                            Classes.seen="{CompiledBinding Seen}"
+                                            Classes.seen="{CompiledBinding IsSeen}"
 											Command="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).SendOnceCommand}" 
 											CommandParameter="{CompiledBinding .}">
 											<AdornerLayer.Adorner>
@@ -160,11 +160,11 @@
                                                     AdornerLayer.IsClipEnabled="False"
                                                     BorderBrush="Black"
                                                     BorderThickness="0"
-                                                    Classes.triggered="{CompiledBinding Triggered}"
+                                                    Classes.blinking="{CompiledBinding IsBlinking}"
                                                     CornerRadius="12"
                                                     UseLayoutRounding="False">
                                                     <Border.Styles>
-                                                        <Style Selector="Border.triggered">
+                                                        <Style Selector="Border.blinking">
                                                             <Style.Animations>
                                                                 <Animation IterationCount="1" Duration="0:0:0.5">
                                                                     <KeyFrame Cue="0%">
@@ -183,7 +183,7 @@
                                                                 </Animation>
                                                             </Style.Animations>
                                                         </Style>
-                                                        <Style Selector="Border:not(.triggered)">
+                                                        <Style Selector="Border:not(.blinking)">
                                                             <Setter Property="BorderBrush" Value="#00000000" />
                                                             <Setter Property="Margin" Value="-4" />
                                                             <Setter Property="BorderThickness" Value="0" />
