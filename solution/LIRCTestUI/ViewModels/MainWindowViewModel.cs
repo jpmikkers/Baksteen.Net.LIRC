@@ -69,34 +69,49 @@ public partial class MainWindowViewModel : ObservableValidator
     {
         _ = Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            if(ev.Event == LIRCEvent.EventType.ReceivedButton && ev.Button is not null)
+            switch(ev.Event)
             {
-                var irRemote = RemoteList.FirstOrDefault(x => x.Name == ev.Button.ButtonInfo.RemoteControl);
-
-                if(SelectedRemote != irRemote)
-                {
-                    SelectedRemote = irRemote;
-                }
-
-                if(irRemote is not null)
-                {
-                    var irButton = irRemote.ButtonList.FirstOrDefault(x => x.Name == ev.Button.ButtonInfo.Button);
-
-                    if(irButton is not null)
+                case LIRCEvent.EventType.ReceivedButton when ev.Button is not null:
                     {
-                        irButton.IsSeen = true;
-                        await irButton.TriggerAnimation();
+                        var irRemote = RemoteList.FirstOrDefault(x => x.Name == ev.Button.ButtonInfo.RemoteControl);
 
-                        // scroll button into view
-                        if(App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+                        if(SelectedRemote != irRemote)
                         {
-                            if(lifetime.MainWindow is MainWindow mainWindow)
+                            SelectedRemote = irRemote;
+                        }
+
+                        if(irRemote is not null)
+                        {
+                            var irButton = irRemote.ButtonList.FirstOrDefault(x => x.Name == ev.Button.ButtonInfo.Button);
+
+                            if(irButton is not null)
                             {
-                                mainWindow.ScrollRelatedButtonIntoView(irButton);
+                                irButton.IsSeen = true;
+                                await irButton.TriggerAnimation();
+
+                                // scroll button into view
+                                if(App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+                                {
+                                    if(lifetime.MainWindow is MainWindow mainWindow)
+                                    {
+                                        mainWindow.ScrollRelatedButtonIntoView(irButton);
+                                    }
+                                }
                             }
                         }
+
+                        break;
                     }
-                }
+
+                case LIRCEvent.EventType.Disconnected:
+                    await Disconnect();
+                    if(ev.Reason is not null) await ShowExceptionDialog(ev.Reason);
+                    break;
+
+                case LIRCEvent.EventType.Sighup:
+                    // the daemon reloaded its remote configurations, so lets (re-)populate the remote list
+                    await PopulateRemotes();
+                    break;
             }
         }, DispatcherPriority.Background).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
 
@@ -144,9 +159,24 @@ public partial class MainWindowViewModel : ObservableValidator
                 }
             );
 
+            await PopulateRemotes();
+            Connected = true;
+        }
+        catch(Exception ex)
+        {
+            await ShowExceptionDialog(ex);
+        }
+    }
+
+    private async Task PopulateRemotes()
+    {
+        if(_client is not null)
+        {
+            RemoteList.Clear();
+
             foreach(var remote in await _client.ListRemoteControls())
             {
-                var irRemote = new IRRemote{ Name = remote };
+                var irRemote = new IRRemote { Name = remote };
 
                 foreach(var button in await _client.ListRemoteControlKeys(remote))
                 {
@@ -155,12 +185,6 @@ public partial class MainWindowViewModel : ObservableValidator
 
                 RemoteList.Add(irRemote);
             }
-
-            Connected = true;
-        }
-        catch(Exception ex)
-        {
-            await ShowExceptionDialog(ex);
         }
     }
 
