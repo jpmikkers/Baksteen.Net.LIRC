@@ -38,6 +38,7 @@ public sealed class LIRCClient : ILIRCClient
     Task? _worker;
     readonly Channel<Response> _responseChannel;
     bool _isConnected;
+    readonly ReentrancyPrevention _reentrancyPrevention = new();
 
     public LIRCClientSettings Settings { get; private init; }
 
@@ -62,12 +63,13 @@ public sealed class LIRCClient : ILIRCClient
     public static async Task<ILIRCClient> Connect(EndPoint endPoint, LIRCClientSettings settings)
     {
         var result = new LIRCClient(settings);
-        await result.Connect(endPoint);
+        await result.Connect(endPoint).ConfigureAwait(false);
         return result;
     }
 
     private async Task Connect(EndPoint endPoint)
     {
+        using var re = _reentrancyPrevention.AssertNotReentrant();
         if(_isConnected) throw new InvalidOperationException("already connected");
 
         Socket socket;
@@ -77,7 +79,7 @@ public sealed class LIRCClient : ILIRCClient
             socket = new(endPoint.AddressFamily, SocketType.Stream, ProtocolType.IP)
             {
                 SendTimeout = 10000,
-                ReceiveTimeout = Timeout.Infinite
+                ReceiveTimeout = Timeout.Infinite,
             };
         }
         else
@@ -86,7 +88,7 @@ public sealed class LIRCClient : ILIRCClient
             {
                 NoDelay = true,
                 SendTimeout = 10000,
-                ReceiveTimeout = Timeout.Infinite
+                ReceiveTimeout = Timeout.Infinite,
             };
         }
 
@@ -113,12 +115,12 @@ public sealed class LIRCClient : ILIRCClient
     private async Task<Response> SendReceive(string command)
     {
         FlushResponses();
-        await _writer.WriteAsync($"{command}\n");
-        await _writer.FlushAsync();
+        await _writer.WriteAsync($"{command}\n").ConfigureAwait(false);
+        await _writer.FlushAsync().ConfigureAwait(false);
 
         using var tcs = new CancellationTokenSource();
         tcs.CancelAfter(Settings.ResponseTimeout);
-        var response = await _responseChannel.Reader.ReadAsync(tcs.Token);
+        var response = await _responseChannel.Reader.ReadAsync(tcs.Token).ConfigureAwait(false);
 
         if(response.Command != command)
         {
@@ -143,21 +145,24 @@ public sealed class LIRCClient : ILIRCClient
     public async Task<string> GetVersion()
     {
         AssertConnected();
-        var response = await SendReceive(CMD_VERSION);
+        using var re = _reentrancyPrevention.AssertNotReentrant();
+        var response = await SendReceive(CMD_VERSION).ConfigureAwait(false);
         return response.Data[0];
     }
 
     public async Task<List<string>> ListRemoteControls()
     {
         AssertConnected();
-        var response = await SendReceive(CMD_LIST);
+        using var re = _reentrancyPrevention.AssertNotReentrant();
+        var response = await SendReceive(CMD_LIST).ConfigureAwait(false);
         return response.Data;
     }
 
     public async Task<List<ButtonInfo>> ListRemoteControlKeys(string remoteControl)
     {
         AssertConnected();
-        var response = await SendReceive($"{CMD_LIST} {remoteControl}");
+        using var re = _reentrancyPrevention.AssertNotReentrant();
+        var response = await SendReceive($"{CMD_LIST} {remoteControl}").ConfigureAwait(false);
 
         List<ButtonInfo> result = [];
 
@@ -182,26 +187,29 @@ public sealed class LIRCClient : ILIRCClient
     public async Task SendOnce(string remoteControl, string button, int repeats = 0)
     {
         AssertConnected();
+        using var re = _reentrancyPrevention.AssertNotReentrant();
         var cmd = $"{CMD_SEND_ONCE} {remoteControl} {button}";
         if(repeats > 0) cmd += $" {repeats}";
-        _ = await SendReceive(cmd);
+        _ = await SendReceive(cmd).ConfigureAwait(false);
     }
 
     public async Task SendStart(string remoteControl, string button)
     {
         AssertConnected();
-        _ = await SendReceive($"{CMD_SEND_START} {remoteControl} {button}");
+        using var re = _reentrancyPrevention.AssertNotReentrant();
+        _ = await SendReceive($"{CMD_SEND_START} {remoteControl} {button}").ConfigureAwait(false);
     }
 
     public async Task SendStop(string remoteControl, string button)
     {
         AssertConnected();
-        _ = await SendReceive($"{CMD_SEND_STOP} {remoteControl} {button}");
+        using var re = _reentrancyPrevention.AssertNotReentrant();
+        _ = await SendReceive($"{CMD_SEND_STOP} {remoteControl} {button}").ConfigureAwait(false);
     }
 
     private async Task<String> ReadResponseLine(CancellationToken cancellationToken)
     {
-        var result = await _reader.ReadLineAsync(cancellationToken);
+        var result = await _reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
 
         if(result == null)
         {
@@ -213,18 +221,18 @@ public sealed class LIRCClient : ILIRCClient
 
     private async Task<Response> ReadPacket(string command, CancellationToken cancellationToken)
     {
-        var status = await ReadResponseLine(cancellationToken);
+        var status = await ReadResponseLine(cancellationToken).ConfigureAwait(false);
 
         if(status != KWD_SUCCESS && status != KWD_ERROR)
         {
             throw new LIRCException("Invalid response format");
         }
 
-        var data_or_end = await ReadResponseLine(cancellationToken);
+        var data_or_end = await ReadResponseLine(cancellationToken).ConfigureAwait(false);
 
         if(data_or_end == KWD_DATA)
         {
-            var length = await ReadResponseLine(cancellationToken);
+            var length = await ReadResponseLine(cancellationToken).ConfigureAwait(false);
 
             if(int.TryParse(length, out var numLines))
             {
@@ -234,11 +242,11 @@ public sealed class LIRCClient : ILIRCClient
 
                 for(int i = 0; i < numLines; i++)
                 {
-                    var dline = await ReadResponseLine(cancellationToken);
+                    var dline = await ReadResponseLine(cancellationToken).ConfigureAwait(false);
                     data.Add(dline);
                 }
 
-                var end = await ReadResponseLine(cancellationToken);
+                var end = await ReadResponseLine(cancellationToken).ConfigureAwait(false);
 
                 if(end == KWD_END)
                 {
@@ -282,16 +290,16 @@ public sealed class LIRCClient : ILIRCClient
         {
             while(!cancellationToken.IsCancellationRequested)
             {
-                var line = await ReadResponseLine(cancellationToken);
+                var line = await ReadResponseLine(cancellationToken).ConfigureAwait(false);
 
                 if(line == KWD_BEGIN)
                 {
                     // start of response packet or SIGHUP packet
-                    var commandorsighup = await ReadResponseLine(cancellationToken);
+                    var commandorsighup = await ReadResponseLine(cancellationToken).ConfigureAwait(false);
 
                     if(commandorsighup == KWD_SIGHUP)
                     {
-                        if(await ReadResponseLine(cancellationToken) != KWD_END)
+                        if(await ReadResponseLine(cancellationToken).ConfigureAwait(false) != KWD_END)
                         {
                             throw new LIRCException("Invalid sighup message");
                         }
@@ -303,8 +311,8 @@ public sealed class LIRCClient : ILIRCClient
                     }
                     else
                     {
-                        var responsePacket = await ReadPacket(commandorsighup, cancellationToken);
-                        await _responseChannel.Writer.WriteAsync(responsePacket);
+                        var responsePacket = await ReadPacket(commandorsighup, cancellationToken).ConfigureAwait(false);
+                        await _responseChannel.Writer.WriteAsync(responsePacket).ConfigureAwait(false);
                     }
                 }
                 else
@@ -333,7 +341,7 @@ public sealed class LIRCClient : ILIRCClient
                         {
                             Event = LIRCEvent.EventType.ReceivedButton,
                             Button = decodedButton
-                        });
+                        }).ConfigureAwait(false);
                     }
                     else
                     {
@@ -349,7 +357,7 @@ public sealed class LIRCClient : ILIRCClient
             {
                 Event = LIRCEvent.EventType.Disconnected,
                 Reason = ex
-            });
+            }).ConfigureAwait(false);
         }
     }
 
@@ -362,7 +370,7 @@ public sealed class LIRCClient : ILIRCClient
 
         if(Settings.OnLIRCEventAsync is { } asyncHandler)
         {
-            await asyncHandler(ev);
+            await asyncHandler(ev).ConfigureAwait(false);
         }
     }
 
