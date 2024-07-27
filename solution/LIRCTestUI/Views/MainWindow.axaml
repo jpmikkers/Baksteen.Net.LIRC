@@ -6,10 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LIRCTestUI.ViewModels"
     Title="LIRCTestUI"
-	MinWidth="650"
-	MinHeight="200"	
     Width="800"
     Height="450"
+    MinWidth="650"
+    MinHeight="200"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="vm:MainWindowViewModel"
@@ -26,7 +26,7 @@
 
     <DockPanel>
 
-		<Border
+        <Border
             Margin="10,10,10,5"
             Padding="8"
             BorderBrush="Gray"
@@ -39,38 +39,39 @@
                 Orientation="Horizontal"
                 Spacing="10">
 
-				<Border Background="#22000000" CornerRadius="5" Margin="4,0,4,0">
-    				<Image Margin="3,3" Height="64" Width="64" Source="/Assets/lirctest_256x256.png" RenderOptions.BitmapInterpolationMode="HighQuality"/>
-				</Border>
+                <Border
+                    Margin="4,0,4,0"
+                    Background="#22000000"
+                    CornerRadius="5">
+                    <Image
+                        Width="64"
+                        Height="64"
+                        Margin="3,3"
+                        RenderOptions.BitmapInterpolationMode="HighQuality"
+                        Source="/Assets/lirctest_256x256.png" />
+                </Border>
 
-				<StackPanel VerticalAlignment="Center" IsEnabled="{CompiledBinding !Connected}">
-                    <CheckBox
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        IsChecked="{CompiledBinding UseUnixDomainSocket}">
-                        _Unix domain socket
-                    </CheckBox>
-                    <CheckBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        IsChecked="{CompiledBinding !UseUnixDomainSocket}">
-                        _Tcp/ip
-                    </CheckBox>
+                <StackPanel VerticalAlignment="Center" IsEnabled="{CompiledBinding !Connected}">
+                    <RadioButton
+                        Content="Unix domain socket"
+                        GroupName="SocketType"
+                        IsChecked="{CompiledBinding UseUnixDomainSocket}" />
+                    <RadioButton
+                        Content="Tcp/ip"
+                        GroupName="SocketType"/>
                 </StackPanel>
 
                 <Border
-					Margin="0,2"
+                    Margin="0,2"
                     Background="Gray"
                     BorderBrush="Gray"
                     BorderThickness="3"
-                    CornerRadius="4"/>
+                    CornerRadius="4" />
 
                 <StackPanel VerticalAlignment="Center" IsEnabled="{CompiledBinding !Connected}">
-					<Label IsVisible="{CompiledBinding !UseUnixDomainSocket}" Target="tbTcpIPEndPoint">_Endpoint:</Label>
+                    <Label IsVisible="{CompiledBinding !UseUnixDomainSocket}" Target="tbTcpIPEndPoint">_Endpoint:</Label>
                     <AutoCompleteBox
-						Name="tbTcpIPEndPoint"
+                        Name="tbTcpIPEndPoint"
                         MinWidth="200"
                         FilterMode="StartsWith"
                         IsVisible="{CompiledBinding !UseUnixDomainSocket}"
@@ -78,7 +79,7 @@
                         Text="{CompiledBinding IPEndPointAsString}" />
                     <Label IsVisible="{CompiledBinding UseUnixDomainSocket}" Target="tbUnixEndPoint">_Endpoint path:</Label>
                     <AutoCompleteBox
-						Name="tbUnixEndPoint"
+                        Name="tbUnixEndPoint"
                         MinWidth="200"
                         FilterMode="StartsWith"
                         IsVisible="{CompiledBinding UseUnixDomainSocket}"
@@ -87,11 +88,11 @@
                 </StackPanel>
 
                 <Border
-					Margin="0,2"
+                    Margin="0,2"
                     Background="Gray"
                     BorderBrush="Gray"
                     BorderThickness="3"
-                    CornerRadius="4"/>
+                    CornerRadius="4" />
 
                 <StackPanel VerticalAlignment="Center" Spacing="4">
                     <Button
@@ -142,19 +143,19 @@
 
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-										<!-- 
-										    Let the MainViewModel handle all the IR button presses, so we need 
-											find the MainViewModel using the following binding and casting magic
-										    see https://docs.avaloniaui.net/docs/basics/data/data-binding/compiled-bindings#type-casting 
-											and	https://docs.avaloniaui.net/docs/basics/data/data-binding/data-binding-syntax#empty-binding-path
-										-->
-										<Button
+                                        <!--
+                                            Let the MainViewModel handle all the IR button presses, so we need
+                                            find the MainViewModel using the following binding and casting magic
+                                            see https://docs.avaloniaui.net/docs/basics/data/data-binding/compiled-bindings#type-casting
+                                            and	https://docs.avaloniaui.net/docs/basics/data/data-binding/data-binding-syntax#empty-binding-path
+                                        -->
+                                        <Button
                                             Margin="4"
                                             Classes="irbutton"
                                             Classes.seen="{CompiledBinding IsSeen}"
-											Command="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).SendOnceCommand}" 
-											CommandParameter="{CompiledBinding .}">
-											<AdornerLayer.Adorner>
+                                            Command="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).SendOnceCommand}"
+                                            CommandParameter="{CompiledBinding .}">
+                                            <AdornerLayer.Adorner>
                                                 <Border
                                                     Margin="-1"
                                                     AdornerLayer.IsClipEnabled="False"
